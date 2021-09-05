@@ -5,12 +5,13 @@ export const setAnimation = () => {
   gsap.to("#main", {
     // アニメーション内容
     backgroundImage: "linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%)",
+    duration: 1,
     scrollTrigger: {
       trigger: "#spring",
       start: "top 40%", //開始時のトリガー条件
       end: "bottom 40%", //終了時のトリガー条件
       toggleActions: "restart none restart none", //デフォルトの指定
-      onEnter: (el) => {
+      onEnter: (_el) => {
         console.log("enter spring");
       }, //スクロールイン時
       onEnterBack: () => {
@@ -23,6 +24,7 @@ export const setAnimation = () => {
   gsap.to("#main", {
     // アニメーション内容
     backgroundImage: "linear-gradient(to right, #92fe9d 0%, #00c9ff 100%)",
+    duration: 1,
     scrollTrigger: {
       trigger: "#summer",
       start: "top 40%", //開始時のトリガー条件
@@ -41,6 +43,7 @@ export const setAnimation = () => {
   gsap.to("#main", {
     // アニメーション内容
     backgroundImage: "linear-gradient(to right, #f9d423 0%, #ff4e50 100%)",
+    duration: 1,
     scrollTrigger: {
       trigger: "#autumn",
       start: "top 40%", //開始時のトリガー条件
@@ -59,6 +62,7 @@ export const setAnimation = () => {
   gsap.to("#main", {
     // アニメーション内容
     backgroundImage: "linear-gradient(to right, #92fe9d 0%, #00c9ff 100%)",
+    duration: 1,
     scrollTrigger: {
       trigger: "#winter",
       start: "top 40%", //開始時のトリガー条件
