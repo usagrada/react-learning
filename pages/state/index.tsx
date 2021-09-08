@@ -27,27 +27,27 @@ const StateLearning: VFC = () => {
   // }, []);
 
   // これならバグらない
-  useEffect(() => {
-    const eff = setInterval(() => {
-      a[1][0] += 100;
-      console.log('add 100')
-      setA([...a]);
-    }, 1000);
-    return () => clearInterval(eff);
-  }, [a]);
-
-  // 微妙にバグる 200ずつ足される？？？？
   // useEffect(() => {
   //   const eff = setInterval(() => {
-  //     setA((prev) => {
-  //       prev[1][0] += 100;
-  //       console.log("add 100");
-  //       console.info(prev)
-  //       return [...prev];
-  //     });
+  //     a[1][0] += 100;
+  //     console.log('add 100')
+  //     setA([...a]);
   //   }, 1000);
   //   return () => clearInterval(eff);
-  // }, []);
+  // }, [a]);
+
+  // 微妙にバグる 200ずつ足される？？？？
+  useEffect(() => {
+    const eff = setInterval(() => {
+      setA((prev) => {
+        prev[1][0] += 100;
+        console.log("add 100");
+        console.info(prev)
+        return [...prev];
+      });
+    }, 1000);
+    return () => clearInterval(eff);
+  }, []);
 
   const a3 = () => {
     // console.log("a3");
