@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, VFC } from "react";
+import { memo, useCallback, useEffect, useState, VFC } from "react";
 
 const StateLearning: VFC = () => {
   const [a, setA] = useState([
@@ -36,17 +36,44 @@ const StateLearning: VFC = () => {
   //   return () => clearInterval(eff);
   // }, [a]);
 
+  // これならバグらない2
+  // useEffect(() => {
+  //   const eff = setTimeout(() => {
+  //     a[1][0] += 100;
+  //     console.log('add 100')
+  //     setA([...a]);
+  //   }, 1000);
+  //   return () => clearInterval(eff);
+  // }, [a]);
+
   // 微妙にバグる 200ずつ足される？？？？
+  // useEffect(() => {
+  //   const eff = setTimeout(() => {
+  //     setA((prev) => {
+  //       prev[1][0] += 100;
+  //       console.log("add 100");
+  //       console.info(prev);
+  //       return [...prev];
+  //     });
+  //   }, 1000);
+  //   return () => clearInterval(eff);
+  // }, [a]);
+
   useEffect(() => {
     const eff = setInterval(() => {
       setA((prev) => {
-        prev[1][0] += 100;
-        console.log("add 100");
-        console.info(prev)
-        return [...prev];
+        // const newA = prev.map((e) => e) // これだとバグる
+        // const newA = prev.map((e) => e.map(el => el)) // うまくいく
+        const newA = JSON.parse(JSON.stringify(prev)); // 最適解
+        // const newA = [...prev];　// バグる
+        newA[1][0] += 100;
+        return [...newA];
       });
     }, 1000);
-    return () => clearInterval(eff);
+
+    return () => {
+      clearInterval(eff);
+    };
   }, []);
 
   const a3 = () => {
@@ -54,22 +81,25 @@ const StateLearning: VFC = () => {
     return a[1][0];
   };
 
-  const port = () => {
-    const newArray = [
-      [
-        a[0][0] * a[0][0] + a[0][1] * a[1][0],
-        a[0][0] * a[0][1] + a[0][1] * a[1][1],
-      ],
-      [
-        a[1][0] * a[0][0] + a[1][1] * a[1][0],
-        a[1][0] * a[0][1] + a[1][1] * a[1][1],
-      ],
-    ];
-    // const newArray = a;
-    // a[1][1] = 3;
-    setA([...newArray]);
-    // setA(newArray);
-  };
+  const port = useCallback(() => {
+    setA((p) => {
+      const newArray = [
+        [
+          p[0][0] * p[0][0] + p[0][1] * p[1][0],
+          p[0][0] * p[0][1] + p[0][1] * p[1][1],
+        ],
+        [
+          p[1][0] * p[0][0] + p[1][1] * p[1][0],
+          p[1][0] * p[0][1] + p[1][1] * p[1][1],
+        ],
+      ];
+      const newArray2 = [
+        [0, 0],
+        [0, 1],
+      ];
+      return newArray2;
+    });
+  }, []);
   const [b, setB] = useState(1);
   return (
     <div style={{ margin: "10%" }}>
