@@ -1,4 +1,4 @@
-import { memo, useState, VFC } from "react";
+import { memo, useEffect, useState, VFC } from "react";
 
 const StateLearning: VFC = () => {
   const [a, setA] = useState([
@@ -6,10 +6,53 @@ const StateLearning: VFC = () => {
     [0, 4],
   ]);
 
+  // これだとバグる
+  // useEffect(() => {
+  //   const eff = setInterval(() => {
+  //     a[1][0] += 100;
+  //     console.log('add 100')
+  //     setA([...a]);
+  //   }, 1000);
+
+  // }, [a]);
+
+  // // これだとバグる
+  // useEffect(() => {
+  //   const eff = setInterval(() => {
+  //     a[1][0] += 100;
+  //     console.log('add 100')
+  //     setA([...a]);
+  //   }, 1000);
+  //   return () => clearInterval(eff);
+  // }, []);
+
+  // これならバグらない
+  useEffect(() => {
+    const eff = setInterval(() => {
+      a[1][0] += 100;
+      console.log('add 100')
+      setA([...a]);
+    }, 1000);
+    return () => clearInterval(eff);
+  }, [a]);
+
+  // 微妙にバグる 200ずつ足される？？？？
+  // useEffect(() => {
+  //   const eff = setInterval(() => {
+  //     setA((prev) => {
+  //       prev[1][0] += 100;
+  //       console.log("add 100");
+  //       console.info(prev)
+  //       return [...prev];
+  //     });
+  //   }, 1000);
+  //   return () => clearInterval(eff);
+  // }, []);
+
   const a3 = () => {
-    console.log("a3");
-    return a[1][0]
-  }
+    // console.log("a3");
+    return a[1][0];
+  };
 
   const port = () => {
     const newArray = [
@@ -32,7 +75,7 @@ const StateLearning: VFC = () => {
     <div style={{ margin: "10%" }}>
       <h1>State Learning</h1>
       <div>
-        <NewMemoStateArea a={a} b={b} a3={a3}/>
+        <NewMemoStateArea a={a} b={b} a3={a3} />
         {/* <StateArea a={a} /> */}
         <div onClick={port}>Click</div>
         <div onClick={() => console.log("click2")}>click2</div>
@@ -49,12 +92,12 @@ const StateLearning: VFC = () => {
 };
 
 const StateArea: VFC<{ a: number[][]; b: number }> = (props) => {
-  console.log("state area");
+  // console.log("state area");
   const a = props.a;
   function a1(a: any) {
     return a[0][0];
   }
-  
+
   function a2(a: any) {
     return a[0][1];
   }
@@ -74,22 +117,22 @@ const StateArea: VFC<{ a: number[][]; b: number }> = (props) => {
 
 const MemoStateArea = memo(StateArea);
 
-type Props = { a: number[][]; b: number, a3: Function };
+type Props = { a: number[][]; b: number; a3: Function };
 // eslint-disable-next-line react/display-name
 const NewMemoStateArea = memo((props: Props) => {
   console.log("state area");
   const a = props.a;
   const a1 = () => {
-    console.log("a1")
+    console.log("a1");
     return a[0][0];
-  }
+  };
   function a2() {
     console.log("a2");
     return a[0][1];
   }
 
-  function cli (){
-    console.log(a1() == 0 || 2 ||"style" || 3);
+  function cli() {
+    console.log(a1() == 0 || 2 || "style" || 3);
   }
 
   return (
